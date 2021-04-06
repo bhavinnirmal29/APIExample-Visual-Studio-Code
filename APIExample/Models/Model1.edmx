@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="LTIMVCModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmpID" />
+          </Key>
+          <Property Name="EmpID" Type="int" Nullable="false" />
+          <Property Name="EmpName" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Dept" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Desg" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Salary" Type="money" Nullable="false" />
+          <Property Name="projid" Type="int" />
+          <Property Name="password" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="ProjectInfo">
+          <Key>
+            <PropertyRef Name="projid" />
+          </Key>
+          <Property Name="projid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="projname" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="domain" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Employee__projid__36B12243">
+          <End Role="ProjectInfo" Type="Self.ProjectInfo" Multiplicity="0..1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectInfo">
+              <PropertyRef Name="projid" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="projid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_SelectProjectbyId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_updateProject" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pid" Type="int" Mode="In" />
+          <Parameter Name="pname" Type="varchar" Mode="In" />
+          <Parameter Name="domain" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="LTIMVCModelStoreContainer">
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectInfo" EntityType="Self.ProjectInfo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Employee__projid__36B12243" Association="Self.FK__Employee__projid__36B12243">
+            <End Role="ProjectInfo" EntitySet="ProjectInfo" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LTIMVCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmpID" />
+          </Key>
+          <Property Name="EmpID" Type="Int32" Nullable="false" />
+          <Property Name="EmpName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Dept" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Desg" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salary" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="projid" Type="Int32" />
+          <Property Name="password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectInfo" Relationship="Self.FK__Employee__projid__36B12243" FromRole="Employee" ToRole="ProjectInfo" />
+        </EntityType>
+        <EntityType Name="ProjectInfo">
+          <Key>
+            <PropertyRef Name="projid" />
+          </Key>
+          <Property Name="projid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="projname" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="domain" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK__Employee__projid__36B12243" FromRole="ProjectInfo" ToRole="Employee" />
+        </EntityType>
+        <Association Name="FK__Employee__projid__36B12243">
+          <End Role="ProjectInfo" Type="Self.ProjectInfo" Multiplicity="0..1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectInfo">
+              <PropertyRef Name="projid" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="projid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="LTIMVCEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="ProjectInfoes" EntityType="Self.ProjectInfo" />
+          <AssociationSet Name="FK__Employee__projid__36B12243" Association="Self.FK__Employee__projid__36B12243">
+            <End Role="ProjectInfo" EntitySet="ProjectInfoes" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <FunctionImport Name="sp_SelectProjectbyId" ReturnType="Collection(LTIMVCModel.sp_SelectProjectbyId_Result)">
+            <Parameter Name="pid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_updateProject">
+            <Parameter Name="pid" Mode="In" Type="Int32" />
+            <Parameter Name="pname" Mode="In" Type="String" />
+            <Parameter Name="domain" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_SelectProjectbyId_Result">
+          <Property Type="Int32" Name="projid" Nullable="false" />
+          <Property Type="String" Name="projname" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="domain" Nullable="false" MaxLength="40" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LTIMVCModelStoreContainer" CdmEntityContainer="LTIMVCEntities">
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="LTIMVCModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="Dept" ColumnName="Dept" />
+                <ScalarProperty Name="Desg" ColumnName="Desg" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="projid" ColumnName="projid" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectInfoes">
+            <EntityTypeMapping TypeName="LTIMVCModel.ProjectInfo">
+              <MappingFragment StoreEntitySet="ProjectInfo">
+                <ScalarProperty Name="projid" ColumnName="projid" />
+                <ScalarProperty Name="projname" ColumnName="projname" />
+                <ScalarProperty Name="domain" ColumnName="domain" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_SelectProjectbyId" FunctionName="LTIMVCModel.Store.sp_SelectProjectbyId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="LTIMVCModel.sp_SelectProjectbyId_Result">
+                <ScalarProperty Name="projid" ColumnName="projid" />
+                <ScalarProperty Name="projname" ColumnName="projname" />
+                <ScalarProperty Name="domain" ColumnName="domain" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_updateProject" FunctionName="LTIMVCModel.Store.sp_updateProject" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
