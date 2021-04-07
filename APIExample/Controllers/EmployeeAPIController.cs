@@ -17,12 +17,22 @@ namespace APIExample.Controllers
        
         LTIMVCEntities db = new LTIMVCEntities();
         [Route("api/EmployeeAPI/GetAllEmployees")]
-        
         [HttpGet]
-        public IEnumerable<Employee> Get()
+        public IEnumerable<EmpProjectModel> Get()
         {
-            //this get() method retrieves all rows from the table
-            return db.Employees.ToList();
+            try
+            {
+                var data = from e in db.Employees
+                           join p in db.ProjectInfoes
+                           on e.projid equals p.projid
+                           select new EmpProjectModel { EmpID = e.EmpID, EmpName = e.EmpName, Dept = e.Dept, Desg = e.Desg, Salary = (double)e.Salary, projid = (int)e.projid, password = e.password };
+                //this Get() method retrieves all employees from the table
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         [Route("api/EmployeeAPI/GetEmployeeByID/{id}")]
         [HttpGet]
@@ -41,7 +51,7 @@ namespace APIExample.Controllers
                 throw e;
             }
         }
-        [Route("api/EmployeeAPI/{name}/{pwd}")]
+        [Route("api/EmployeeAPI/Login/{name}/{pwd}")]
         [HttpGet]
         public string Get(string name, string pwd)
         {
