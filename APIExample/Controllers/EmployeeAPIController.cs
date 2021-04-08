@@ -103,6 +103,8 @@ namespace APIExample.Controllers
                     olddata.Desg = newemp.Desg;
                     olddata.Dept = newemp.Dept;
                     olddata.Salary = newemp.Salary;
+                    olddata.projid = newemp.projid;
+                    olddata.password = newemp.password;
                     var res = db.SaveChanges();
                     if (res > 0)
                         return true;
